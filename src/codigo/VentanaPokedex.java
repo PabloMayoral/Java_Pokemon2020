@@ -36,7 +36,8 @@ public class VentanaPokedex extends javax.swing.JFrame {
     ResultSet resultadoConsulta;
     Connection conexion;
 
-     Clip sonidoFondo;
+    Clip sonidoFondo;
+
     @Override
     public void paint(Graphics g) {
         super.paintComponents(g);
@@ -56,6 +57,8 @@ public class VentanaPokedex extends javax.swing.JFrame {
         jTextPane1.putClientProperty("Nimbus.Overrides", defaults);
         jTextPane1.putClientProperty("Nimbus.Overrides.InheritDefaults", true);
         jTextPane1.setBackground(bgColor);
+        sonidoFondo();
+        sonidoFondo.start();
         try {
             imagen1 = ImageIO.read(getClass().getResource("/imagenes/black-white.png"));
         } catch (IOException ex) {
@@ -73,7 +76,8 @@ public class VentanaPokedex extends javax.swing.JFrame {
             System.out.println("hay un error tontopoia");
         }
     }
- public void sonidoFondo() {
+
+    public void sonidoFondo() {
         try {//siempre que hace la lectura con algo que hay en el disco, se ejecuta un try
             //catch,esto hace que proteja lo que se encuentra en el disco.
 
@@ -84,6 +88,7 @@ public class VentanaPokedex extends javax.swing.JFrame {
             System.out.println("Hoal");
         }
     }
+
     private void dibujaElPokemosQueEstaEnLaPosicion(int posicion) {
         int fila = posicion / 31;
         int columna = posicion % 31;
