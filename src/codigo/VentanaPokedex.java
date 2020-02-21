@@ -16,9 +16,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.UIDefaults;
+import javax.swing.plaf.ColorUIResource;
 
 /**
  *
@@ -29,12 +31,12 @@ public class VentanaPokedex extends javax.swing.JFrame {
     BufferedImage buffer1 = null;
     Image imagen1 = null;
     int contador = 0;
-    
-    Statement estado ;
+
+    Statement estado;
     ResultSet resultadoConsulta;
     Connection conexion;
-    
 
+     Clip sonidoFondo;
     @Override
     public void paint(Graphics g) {
         super.paintComponents(g);
@@ -47,6 +49,13 @@ public class VentanaPokedex extends javax.swing.JFrame {
      */
     public VentanaPokedex() {
         initComponents();
+        Color bgColor = Color.BLACK;
+        UIDefaults defaults = new UIDefaults();
+        defaults.put("TextPane.background", new ColorUIResource(bgColor));
+        defaults.put("TextPane[Enabled].backgroundPainter", bgColor);
+        jTextPane1.putClientProperty("Nimbus.Overrides", defaults);
+        jTextPane1.putClientProperty("Nimbus.Overrides.InheritDefaults", true);
+        jTextPane1.setBackground(bgColor);
         try {
             imagen1 = ImageIO.read(getClass().getResource("/imagenes/black-white.png"));
         } catch (IOException ex) {
@@ -55,17 +64,26 @@ public class VentanaPokedex extends javax.swing.JFrame {
         buffer1 = (BufferedImage) imagenPokemon.createImage(imagenPokemon.getWidth(), imagenPokemon.getHeight());
         Graphics2D g2 = buffer1.createGraphics();
         dibujaElPokemosQueEstaEnLaPosicion(0);
-        try{
+        try {
             Class.forName("com.mysql.jdbc.Driver");
-            conexion = DriverManager.getConnection("jdbc:mysql://127.0.0.1/test","root","");
-         estado = conexion.createStatement();
-        }
-        catch(Exception e ){
+            conexion = DriverManager.getConnection("jdbc:mysql://127.0.0.1/test", "root", "");
+            estado = conexion.createStatement();
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("hay un error tontopoia");
         }
     }
+ public void sonidoFondo() {
+        try {//siempre que hace la lectura con algo que hay en el disco, se ejecuta un try
+            //catch,esto hace que proteja lo que se encuentra en el disco.
 
+            sonidoFondo = AudioSystem.getClip();
+            sonidoFondo.open(AudioSystem.getAudioInputStream(getClass().getResource("/sonidos/467497__enviromaniac2__pokemon-route-201-cheesy-mix (1).wav")));
+//En caso de no poner IO se transforma en una exception generico con errores gerenicos
+        } catch (Exception e) {
+            System.out.println("Hoal");
+        }
+    }
     private void dibujaElPokemosQueEstaEnLaPosicion(int posicion) {
         int fila = posicion / 31;
         int columna = posicion % 31;
@@ -90,83 +108,83 @@ public class VentanaPokedex extends javax.swing.JFrame {
         imagenPokemon = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        altura = new javax.swing.JLabel();
+        jTextPane1 = new javax.swing.JTextPane();
+        tipo1 = new javax.swing.JLabel();
+        peso = new javax.swing.JLabel();
         nombrePokemon = new javax.swing.JLabel();
-        descripcionPokemon = new javax.swing.JLabel();
+        fondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         javax.swing.GroupLayout imagenPokemonLayout = new javax.swing.GroupLayout(imagenPokemon);
         imagenPokemon.setLayout(imagenPokemonLayout);
         imagenPokemonLayout.setHorizontalGroup(
             imagenPokemonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 171, Short.MAX_VALUE)
+            .addGap(0, 210, Short.MAX_VALUE)
         );
         imagenPokemonLayout.setVerticalGroup(
             imagenPokemonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 171, Short.MAX_VALUE)
+            .addGap(0, 110, Short.MAX_VALUE)
         );
 
-        jButton1.setText("<");
+        getContentPane().add(imagenPokemon, new org.netbeans.lib.awtextra.AbsoluteConstraints(51, 131, 210, 110));
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/botonizq.png"))); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 300, 20, 10));
 
-        jButton2.setText(">");
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/botondcha.png"))); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 300, 20, 10));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(imagenPokemon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(46, 46, 46)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(nombrePokemon, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
-                    .addComponent(descripcionPokemon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(72, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(imagenPokemon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
-                        .addComponent(nombrePokemon, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(65, 65, 65)
-                        .addComponent(descripcionPokemon, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(73, Short.MAX_VALUE))
-        );
+        altura.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(altura, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 300, 90, 20));
+
+        jTextPane1.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(jTextPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 190, 220, 50));
+
+        tipo1.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(tipo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 150, 210, 30));
+
+        peso.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(peso, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 294, 100, 30));
+        getContentPane().add(nombrePokemon, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 310, 100, 20));
+
+        fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pokedex.png"))); // NOI18N
+        getContentPane().add(fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 620, 400));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         try {
-            resultadoConsulta = estado.executeQuery("select * from pokemon where id= " +(contador));
-            if(resultadoConsulta.next()){
-            nombrePokemon.setText(resultadoConsulta.getString(2));
-            }else{
-            nombrePokemon.setText("Este pokemon no figura en la pokedex");
+        try {
+            resultadoConsulta = estado.executeQuery("select * from pokemon where id= " + (contador));
+            if (resultadoConsulta.next()) {
+                nombrePokemon.setText(resultadoConsulta.getString(2));
+                altura.setText(" Altura: " + resultadoConsulta.getString(3) + " m.");
+                peso.setText(" Peso: " + resultadoConsulta.getString(4) + " Kg.");
+                jTextPane1.setText(resultadoConsulta.getString(16));
+                if (resultadoConsulta.getString(8) != "") {
+                    tipo1.setText(" Tipo: " + resultadoConsulta.getString(7) + "/" + resultadoConsulta.getString(8));
+                } else {
+                    tipo1.setText(" Tipo: " + resultadoConsulta.getString(7));
+                }
+            } else {
+                nombrePokemon.setText("Este pokemon no figura en la pokedex");
+                altura.setText("Este pokemon no figura en la pokedex");
+                peso.setText("Este pokemon no figura en la pokedex");
+                tipo1.setText("Este pokemon no figura en la pokedex");
+                jTextPane1.setText("Este pokemon no figura en la pokedex");
             }
         } catch (SQLException ex) {
 
@@ -179,18 +197,33 @@ public class VentanaPokedex extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       
+
         try {
-            resultadoConsulta = estado.executeQuery("select * from pokemon where id= "+ (contador+2));
-            if(resultadoConsulta.next()){
-            nombrePokemon.setText(resultadoConsulta.getString(2));
-            }else{
-            nombrePokemon.setText("Este pokemon no figura en la pokedex");
+            resultadoConsulta = estado.executeQuery("select * from pokemon where id= " + (contador + 2));
+            if (resultadoConsulta.next()) {
+                nombrePokemon.setText(resultadoConsulta.getString(2));
+
+                altura.setText(" Altura: " + resultadoConsulta.getString(3) + " m.");
+                peso.setText(" Peso: " + resultadoConsulta.getString(4) + " Kg.");
+                jTextPane1.setText(resultadoConsulta.getString(16));
+                if (resultadoConsulta.getString(8) != "") {
+                    tipo1.setText(" Tipo: " + resultadoConsulta.getString(7) + "/" + resultadoConsulta.getString(8));
+                } else {
+                    tipo1.setText(" Tipo: " + resultadoConsulta.getString(7));
+                }
+
+            } else {
+                nombrePokemon.setText("Este pokemon no figura en la pokedex");
+                altura.setText("Este pokemon no figura en la pokedex");
+                peso.setText("Este pokemon no figura en la pokedex");
+                tipo1.setText("Este pokemon no figura en la pokedex");
+                jTextPane1.setText("Este pokemon no figura en la pokedex");
+
             }
         } catch (SQLException ex) {
 
         }
-         contador++;
+        contador++;
         if (contador >= 649) {
             contador = 649;
         }
@@ -233,10 +266,14 @@ public class VentanaPokedex extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel descripcionPokemon;
+    private javax.swing.JLabel altura;
+    private javax.swing.JLabel fondo;
     private javax.swing.JPanel imagenPokemon;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel nombrePokemon;
+    private javax.swing.JLabel peso;
+    private javax.swing.JLabel tipo1;
     // End of variables declaration//GEN-END:variables
 }
