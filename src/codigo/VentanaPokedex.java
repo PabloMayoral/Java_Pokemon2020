@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 /**
  *
@@ -34,6 +36,10 @@ public class VentanaPokedex extends javax.swing.JFrame {
     Statement estado;
     ResultSet resultadoConsulta;
     Connection conexion;
+
+    Clip sonidoFondo;
+    Clip sonidoBoton;
+
     //estructura para guardar todo el contenido de la base de datos de golpe
     HashMap<String, Pokemon> listaPokemons = new HashMap();
 
@@ -49,11 +55,15 @@ public class VentanaPokedex extends javax.swing.JFrame {
      */
     public VentanaPokedex() {
         initComponents();
+        sonidoFondo();
+        sonidoFondo.start();
         try {
             imagen1 = ImageIO.read(getClass().getResource("/imagenes/black-white.png"));
+
         } catch (IOException ex) {
 
         }
+
         buffer1 = (BufferedImage) imagenPokemon.createImage(imagenPokemon.getWidth(), imagenPokemon.getHeight());
         Graphics2D g2 = buffer1.createGraphics();
         dibujaElPokemosQueEstaEnLaPosicion(0);
@@ -79,6 +89,7 @@ public class VentanaPokedex extends javax.swing.JFrame {
             System.out.println(e.getMessage());
             System.out.println("hay un error tontopoia");
         }
+
     }
 
     private void dibujaElPokemosQueEstaEnLaPosicion(int posicion) {
@@ -91,6 +102,30 @@ public class VentanaPokedex extends javax.swing.JFrame {
         g2.drawImage(imagen1, 0, 0, imagenPokemon.getWidth(), imagenPokemon.getHeight(),//posiciones X,Y del jpanel + ancho y alto
                 columna * 96, fila * 96, columna * 96 + 96, fila * 96 + 96, null);//posion inicial y final X,Y dentro de la imagen del pokemonç
         repaint();
+    }
+
+    public void sonidoFondo() {
+        try {//siempre que hace la lectura con algo que hay en el disco, se ejecuta un try
+            //catch,esto hace que proteja lo que se encuentra en el disco.
+
+            sonidoFondo = AudioSystem.getClip();
+            sonidoFondo.open(AudioSystem.getAudioInputStream(getClass().getResource("/sonidos/467497__enviromaniac2__pokemon-route-201-cheesy-mix (1).wav")));
+//En caso de no poner IO se transforma en una exception generico con errores gerenicos
+        } catch (Exception e) {
+            System.out.println("Hoal");
+        }
+    }
+
+    public void sonidoBoton() {
+        try {//siempre que hace la lectura con algo que hay en el disco, se ejecuta un try
+            //catch,esto hace que proteja lo que se encuentra en el disco.
+
+            sonidoBoton = AudioSystem.getClip();
+            sonidoBoton.open(AudioSystem.getAudioInputStream(getClass().getResource("/sonidos/429625__camwaw__boton.wav")));
+//En caso de no poner IO se transforma en una exception generico con errores gerenicos
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -106,11 +141,12 @@ public class VentanaPokedex extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         nombrePokemon = new javax.swing.JLabel();
-        descripcionPokemon = new javax.swing.JLabel();
         peso = new javax.swing.JLabel();
         altura = new javax.swing.JLabel();
         tipo1 = new javax.swing.JLabel();
         tipo2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         fondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -146,11 +182,6 @@ public class VentanaPokedex extends javax.swing.JFrame {
         getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 270, 20, 20));
         getContentPane().add(nombrePokemon, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 280, 100, 20));
 
-        descripcionPokemon.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        descripcionPokemon.setForeground(new java.awt.Color(255, 255, 255));
-        descripcionPokemon.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        getContentPane().add(descripcionPokemon, new org.netbeans.lib.awtextra.AbsoluteConstraints(367, 166, 220, 60));
-
         peso.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(peso, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 270, 90, 20));
 
@@ -162,6 +193,17 @@ public class VentanaPokedex extends javax.swing.JFrame {
 
         tipo2.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(tipo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 120, 100, 40));
+
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setBackground(new java.awt.Color(0, 0, 0));
+        jTextArea1.setColumns(2);
+        jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
+        jTextArea1.setRows(3);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 160, 220, 50));
 
         fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pokedex.png"))); // NOI18N
         getContentPane().add(fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, 610, 320));
@@ -178,7 +220,7 @@ public class VentanaPokedex extends javax.swing.JFrame {
             altura.setText(p.altura);
             tipo1.setText(p.tipo1);
             tipo2.setText(p.tipo2);
-            descripcionPokemon.setText(p.descripcion);
+            jTextArea1.setText(p.descripcion);
 
         } else {
             nombrePokemon.setText("NO HAY DATOS");
@@ -186,13 +228,14 @@ public class VentanaPokedex extends javax.swing.JFrame {
             altura.setText("NO HAY DATOS");
             tipo1.setText("NO HAY DATOS");
             tipo2.setText("NO HAY DATOS");
-            descripcionPokemon.setText("NO HAY DATOS");
+            jTextArea1.setText("NO HAY DATOS");
         }
         contador--;
         if (contador <= 0) {
             contador = 0;
         }
-
+        sonidoBoton();
+        sonidoBoton.start();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -205,20 +248,21 @@ public class VentanaPokedex extends javax.swing.JFrame {
             altura.setText(p.altura);
             tipo1.setText(p.tipo1);
             tipo2.setText(p.tipo2);
-            descripcionPokemon.setText(p.descripcion);
+            jTextArea1.setText(p.descripcion);
         } else {
             nombrePokemon.setText("NO HAY DATOS");
             peso.setText("NO HAY DATOS");
             altura.setText("NO HAY DATOS");
             tipo1.setText("NO HAY DATOS");
             tipo2.setText("NO HAY DATOS");
-            descripcionPokemon.setText("NO HAY DATOS");
+            jTextArea1.setText("NO HAY DATOS");
         }
         contador++;
         if (contador >= 649) {
             contador = 649;
         }
-
+        sonidoBoton();
+        sonidoBoton.start();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -258,11 +302,12 @@ public class VentanaPokedex extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel altura;
-    private javax.swing.JLabel descripcionPokemon;
     private javax.swing.JLabel fondo;
     private javax.swing.JPanel imagenPokemon;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel nombrePokemon;
     private javax.swing.JLabel peso;
     private javax.swing.JLabel tipo1;
