@@ -168,7 +168,7 @@ public class VentanaPokedex extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 270, 20, 20));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 270, 20, 10));
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/botondcha.png"))); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -176,7 +176,7 @@ public class VentanaPokedex extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 270, 20, 20));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 270, 20, 10));
         getContentPane().add(nombrePokemon, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 280, 100, 20));
 
         peso.setForeground(new java.awt.Color(255, 255, 255));
